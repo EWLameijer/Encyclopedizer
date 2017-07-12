@@ -1,0 +1,9 @@
+aardbei: rood fruit
+
+bosbes: blauw fruit
+
+braam: voor jam
+
+mango: is lekker
+
+mandarijn: is oranje
