@@ -1,9 +1,12 @@
-aardbei: rood fruit
+aardbei: rood fruit. Favoriet van Laure. Die houdt van alle roze dingen. En zoet! Al houdt Laure ook van kaas. En andere dingen. Een boel andere dingen
 
-bosbes: blauw fruit
+bosbes: blauw fruit. Werden vroeger in apotheek gebruikt. Mam's favoriet
 
 braam: voor jam
 
+mandarijn: is oranje
+
 mango: is lekker
 
-mandarijn: is oranje
+perzik: Beroemd van het verhaal van Roald Dahl
+

@@ -13,19 +13,31 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 
 public class Main extends Application {
+    private static Stage primaryStage;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 1000, 800));
-        Encyclopedia ency = new Encyclopedia();
-        primaryStage.show();
+            this.primaryStage = primaryStage;
+
+            Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+
+            primaryStage.setScene(new Scene(root, 1000, 800));
+            primaryStage.show();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
+        Parent root2 = (Parent)loader.load();
+        Controller myController = loader.getController();
+        myController.setStage(primaryStage);
     }
 
     public static void main(String[] args) {
         launch(args);
     }
+
+    static Stage getStage() {
+        return primaryStage;
+    }
+
+
 }
 
 /*
