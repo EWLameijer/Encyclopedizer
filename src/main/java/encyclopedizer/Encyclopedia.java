@@ -29,8 +29,9 @@ public class Encyclopedia {
             filename = encyFilename;
             final Charset charset = StandardCharsets.UTF_8;
             List<String> lines = Files.readAllLines(path, charset);
-            lines.stream().filter(line -> !line.isEmpty()).map(Entry::new).forEach(this::addEntry);
+            lines.stream().filter(line -> !line.isEmpty()).map(Entry::new).forEach(this::loadEntry);
             Collections.sort(entries);
+            checkForDuplicates();
             System.out.println("Lines: " + lines);
             System.out.println("Number of entries: " + entries.size());
         } catch (IOException e) {
@@ -40,6 +41,23 @@ public class Encyclopedia {
 
     public Encyclopedia() {
         this(DEFAULT_ENCY_FILENAME);
+    }
+
+    private void checkForDuplicates() {
+        if (entries.size() == 0) {
+            return;
+        }
+        // as I am possibly merging entries, cannot use simple foreach loop here...
+        for (int entryIndex = 1; entryIndex < entries.size(); entryIndex++) {
+            Entry currentEntry = entries.get(entryIndex);
+            Entry previousEntry = entries.get(entryIndex - 1);
+            if (currentEntry.getName().equals(previousEntry.getName())) {
+                System.out.println("Duplicate in names: " + currentEntry.getName());
+                previousEntry.addToDescription(currentEntry.getDescription());
+                entries.remove(entryIndex);
+                entryIndex--; // to handle multiple possible duplicates
+            }
+        }
     }
 
     private void saveEncy() {
@@ -61,10 +79,19 @@ public class Encyclopedia {
         addEntry(newEntry);
     }
 
+    /**
+     * adds a new entry to the encyclopedia, and takes care that is is saved immediately
+     *
+     * @param newEntry the entry to be added
+     */
     public void addEntry(Entry newEntry) {
         entries.add(newEntry);
         Collections.sort(entries);
         saveEncy();
+    }
+
+    private void loadEntry(Entry newEntry) {
+        entries.add(newEntry);
     }
 
     Optional<Entry> getEntryStartingWith(String textStart) {
@@ -76,6 +103,25 @@ public class Encyclopedia {
 
     public String getFilename() {
         return filename;
+    }
+
+    public Entry getNextEntry(Entry entry) {
+        int index = entries.indexOf(entry);
+        if (index < (entries.size() - 1)) {
+            return entries.get(index + 1);
+        } else {
+            return entry;
+        }
+
+    }
+
+    public Entry getPreviousEntry(Entry entry) {
+        int index = entries.indexOf(entry);
+        if (index >= 1) {
+            return entries.get(index - 1);
+        } else {
+            return entry;
+        }
     }
 
 

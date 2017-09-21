@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
@@ -22,9 +23,10 @@
               <MenuItem fx:id="CloseMenuItem" mnemonicParsing="false" onAction="#closeApplication" text="Quit" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
+          <Menu mnemonicParsing="false" text="Category Management">
             <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
+              <MenuItem fx:id="createCategoryItem" mnemonicParsing="false" onAction="#createCategory" text="Create category" />
+                  <MenuItem fx:id="deleteCategoryMenuItem" mnemonicParsing="false" onAction="#deleteCategory" text="Delete category" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -56,11 +58,12 @@
     </rowConstraints>
     <children>
         <TextField fx:id="conceptBrowseField" onInputMethodTextChanged="#updateConcept" onKeyReleased="#updateConcept" />
-        <Label fx:id="firstApplicableConceptLabel" text="Label" GridPane.columnIndex="2" />
+        <Label fx:id="firstApplicableConceptLabel" text="Select category:" GridPane.columnIndex="2" />
         <Label fx:id="lastApplicableConceptLabel" text="Label" GridPane.columnIndex="4" />
         <Label fx:id="conceptNameLabel" text="Label" GridPane.rowIndex="3" />
         <TextArea fx:id="conceptDataArea" prefHeight="182.0" prefWidth="192.0" wrapText="true" GridPane.columnSpan="5" GridPane.rowIndex="5" />
-        <ListView fx:id="referringConceptsArea" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="5" GridPane.rowIndex="7" /> </children>
+        <ListView fx:id="referringConceptsArea" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="5" GridPane.rowIndex="7" />
+            <ChoiceBox fx:id="categoryChoice" prefWidth="150.0" GridPane.columnIndex="3" /> </children>
     </GridPane>
    </center>
 </BorderPane>

@@ -28,8 +28,13 @@ public class Controller {
 
     private Stage stage;
 
+
     @FXML
     private MenuItem openFileMenuItem;
+    @FXML
+    private MenuItem createCategoryItem;
+    @FXML
+    private MenuItem deleteCategoryMenuItem;
     @FXML
     private TextArea conceptDataArea;
     @FXML
@@ -49,9 +54,6 @@ public class Controller {
     @FXML
     public void initialize() {
         ency = new Encyclopedia();
-       // Stage primStage = (Stage) conceptBrowseField.getScene().getWindow();
-        //primStage.setTitle(ency.getFilename());
-
 
         conceptBrowseField.setOnKeyPressed((event) -> {
             if(event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.TAB) {
@@ -59,6 +61,16 @@ public class Controller {
                     conceptNameLabel.setText(conceptBrowseField.getText());
                 }
                 conceptDataArea.requestFocus();
+            }
+            else if(event.getCode() == KeyCode.DOWN) {
+                currentEntry = ency.getNextEntry(currentEntry);
+                conceptBrowseField.setText(currentEntry.getName());
+                refreshWindow();
+            }
+            else if(event.getCode() == KeyCode.UP) {
+                currentEntry = ency.getPreviousEntry(currentEntry);
+                conceptBrowseField.setText(currentEntry.getName());
+                refreshWindow();
             }
         }
         );
@@ -72,6 +84,7 @@ public class Controller {
             conceptBrowseField.requestFocus(); } });
 
         CloseMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN));
+        openFileMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
     }
 
 
@@ -79,15 +92,24 @@ public class Controller {
         return new Entry(conceptNameLabel.getText()+ ": " + conceptDataArea.getText());
     }
 
+    void refreshWindow() {
+
+        conceptNameLabel.setText(currentEntry.getName());
+        conceptDataArea.setText(currentEntry.getDescription());
+    }
+
 
     @FXML
     void updateConcept(KeyEvent event) {
         String keyText = conceptBrowseField.getText();
+        showEntry(keyText);
+       //
+    }
+
+    void showEntry(String keyText) {
         originalEntry = ency.getEntryStartingWith(keyText);
         currentEntry = originalEntry.orElse(Entry.DEFAULT_ENTRY);
-        conceptNameLabel.setText(currentEntry.getName());
-        conceptDataArea.setText(currentEntry.getDescription());
-       //
+        refreshWindow();
     }
 
     @FXML
@@ -103,7 +125,18 @@ public class Controller {
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
             ency = new Encyclopedia(file.getAbsolutePath());
+            showEntry("");
         }
+
+    }
+
+    @FXML
+    void createCategory(ActionEvent event) {
+
+    }
+
+    @FXML
+    void deleteCategory(ActionEvent event) {
 
     }
 

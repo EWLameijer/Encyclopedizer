@@ -30,4 +30,8 @@ public class Entry implements Comparable<Entry> {
     public String toLine() {
         return name + ": " + description;
     }
+
+    public void addToDescription(String addedDescription) {
+        description += addedDescription;
+    }
 }
