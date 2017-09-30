@@ -17,6 +17,7 @@ import java.util.Optional;
 public class Encyclopedia {
 
     private List<Entry> entries = new ArrayList<>();
+    private List<String> categories = new ArrayList<>();
     private static final String DEFAULT_ENCY_FILENAME =  "testency.txt";
     private String filename;
 
@@ -29,7 +30,8 @@ public class Encyclopedia {
             filename = encyFilename;
             final Charset charset = StandardCharsets.UTF_8;
             List<String> lines = Files.readAllLines(path, charset);
-            lines.stream().filter(line -> !line.isEmpty()).map(Entry::new).forEach(this::loadEntry);
+            lines.stream().filter(line -> !line.isEmpty()).filter(line -> line.startsWith("[")).map(this::stripBrackets).forEach(this::addCategory);
+            lines.stream().filter(line -> !line.isEmpty()).filter(line -> !line.startsWith("[")).map(Entry::new).forEach(this::loadEntry);
             Collections.sort(entries);
             checkForDuplicates();
             System.out.println("Lines: " + lines);
@@ -43,6 +45,14 @@ public class Encyclopedia {
         this(DEFAULT_ENCY_FILENAME);
     }
 
+    private String stripBrackets(String originalText) {
+        if (originalText.startsWith("[") && originalText.endsWith("]")) {
+            return originalText.substring(1,originalText.length()-1);
+        } else {
+            return originalText;
+        }
+    }
+
     private void checkForDuplicates() {
         if (entries.size() == 0) {
             return;
@@ -51,8 +61,8 @@ public class Encyclopedia {
         for (int entryIndex = 1; entryIndex < entries.size(); entryIndex++) {
             Entry currentEntry = entries.get(entryIndex);
             Entry previousEntry = entries.get(entryIndex - 1);
-            if (currentEntry.getName().equals(previousEntry.getName())) {
-                System.out.println("Duplicate in names: " + currentEntry.getName());
+            if (currentEntry.getTopic().equals(previousEntry.getTopic())) {
+                System.out.println("Duplicate in names: " + currentEntry.getTopic());
                 previousEntry.addToDescription(currentEntry.getDescription());
                 entries.remove(entryIndex);
                 entryIndex--; // to handle multiple possible duplicates
@@ -63,6 +73,9 @@ public class Encyclopedia {
     private void saveEncy() {
         Path path = Paths.get(filename);
         List<String> lines = new ArrayList<>();
+        for (String category: categories) {
+            lines.add("[" + category + "]");
+        }
         for (Entry entry : entries) {
             lines.add(entry.toLine());
             lines.add("");
@@ -96,7 +109,7 @@ public class Encyclopedia {
 
     Optional<Entry> getEntryStartingWith(String textStart) {
         for ( Entry entry : entries ) {
-            if (entry.getName().startsWith(textStart)) return Optional.of(entry);
+            if (entry.getTopic().startsWith(textStart)) return Optional.of(entry);
         }
         return Optional.empty();
     }
@@ -124,5 +137,35 @@ public class Encyclopedia {
         }
     }
 
+    private String normalizeCategory(String rawCategoryName) {
+        return rawCategoryName.trim().toLowerCase();
+    }
 
+    public boolean containsCategory(String categoryName) {
+        return categories.contains(normalizeCategory(categoryName));
+    }
+
+    public void addCategory(String categoryName) {
+        String normalizedName = normalizeCategory(categoryName);
+        if (containsCategory(categoryName)) {
+            throw new RuntimeException("Category already exists!");
+        } else {
+            categories.add(normalizedName);
+            Collections.sort(categories);
+        }
+    }
+
+    public Optional<String> getFirstCategory(String firstCharacter) {
+        for (String category: categories) {
+            if (category.startsWith(firstCharacter)) {
+                return Optional.of(category);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public void updateCategories(Entry entry, String newCategories) {
+        entry.updateCategories(newCategories);
+        saveEncy();
+    }
 }

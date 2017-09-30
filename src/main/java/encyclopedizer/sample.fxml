@@ -63,7 +63,9 @@
         <Label fx:id="conceptNameLabel" text="Label" GridPane.rowIndex="3" />
         <TextArea fx:id="conceptDataArea" prefHeight="182.0" prefWidth="192.0" wrapText="true" GridPane.columnSpan="5" GridPane.rowIndex="5" />
         <ListView fx:id="referringConceptsArea" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="5" GridPane.rowIndex="7" />
-            <ChoiceBox fx:id="categoryChoice" prefWidth="150.0" GridPane.columnIndex="3" /> </children>
+            <ChoiceBox fx:id="categoryChoice" prefWidth="150.0" GridPane.columnIndex="3" />
+            <Label text="Categories:" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="categoriesField" onKeyTyped="#editCategories" prefHeight="25.0" prefWidth="194.0" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="3" /> </children>
     </GridPane>
    </center>
 </BorderPane>

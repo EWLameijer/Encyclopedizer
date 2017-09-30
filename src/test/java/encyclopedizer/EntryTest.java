@@ -17,7 +17,7 @@ public class EntryTest {
         String randomEntry = randomTerm + ":" + randomData;
 
         Entry testEntry = new Entry(randomEntry);
-        assertEquals(testEntry.getName(), randomTerm);
+        assertEquals(testEntry.getTopic(), randomTerm);
         assertEquals(testEntry.getDescription(), randomData);
     }
 }

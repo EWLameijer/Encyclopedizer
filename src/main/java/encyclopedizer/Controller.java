@@ -19,18 +19,30 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Controller is simply the controller for the Encyclopedizer app, handling what all buttons and menu items do.
+ */
 public class Controller {
 
-    Encyclopedia ency;
-    Optional<Entry> originalEntry;
-    Entry currentEntry;
+    // Reference to the encyclopedia that is viewed/edited
+    private Encyclopedia ency;
+
+    // If there is an original entry that is being edited, store it in originalEntry
+    private Optional<Entry> originalEntry;
+
+    // What the entry currently looks like (which can be different from the original entry, if text is being edited
+    // or such
+    private Entry currentEntry;
+
+    // a reference to the primary stage of the application
+    private Stage primaryStage;
 
 
-    private Stage stage;
-
-
+    // open new (encyclopedia) file
     @FXML
     private MenuItem openFileMenuItem;
+
+    // create new category
     @FXML
     private MenuItem createCategoryItem;
     @FXML
@@ -47,6 +59,8 @@ public class Controller {
     private Label lastApplicableConceptLabel;
     @FXML
     private ListView<?> referringConceptsArea;
+    @FXML
+    private TextField categoriesField;
 
     @FXML
     private MenuItem CloseMenuItem;
@@ -54,6 +68,7 @@ public class Controller {
     @FXML
     public void initialize() {
         ency = new Encyclopedia();
+        showEntry("");
 
         conceptBrowseField.setOnKeyPressed((event) -> {
             if(event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.TAB) {
@@ -64,12 +79,12 @@ public class Controller {
             }
             else if(event.getCode() == KeyCode.DOWN) {
                 currentEntry = ency.getNextEntry(currentEntry);
-                conceptBrowseField.setText(currentEntry.getName());
+                conceptBrowseField.setText(currentEntry.getTopic());
                 refreshWindow();
             }
             else if(event.getCode() == KeyCode.UP) {
                 currentEntry = ency.getPreviousEntry(currentEntry);
-                conceptBrowseField.setText(currentEntry.getName());
+                conceptBrowseField.setText(currentEntry.getTopic());
                 refreshWindow();
             }
         }
@@ -85,6 +100,8 @@ public class Controller {
 
         CloseMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN));
         openFileMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
+        createCategoryItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN));
+        deleteCategoryMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.D, KeyCombination.CONTROL_DOWN));
     }
 
 
@@ -94,7 +111,8 @@ public class Controller {
 
     void refreshWindow() {
 
-        conceptNameLabel.setText(currentEntry.getName());
+        conceptNameLabel.setText(currentEntry.getTopic());
+        categoriesField.setText(currentEntry.getCategoriesAsString());
         conceptDataArea.setText(currentEntry.getDescription());
     }
 
@@ -122,7 +140,7 @@ public class Controller {
     void openFile(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
-        File file = fileChooser.showOpenDialog(stage);
+        File file = fileChooser.showOpenDialog(primaryStage);
         if (file != null) {
             ency = new Encyclopedia(file.getAbsolutePath());
             showEntry("");
@@ -132,7 +150,21 @@ public class Controller {
 
     @FXML
     void createCategory(ActionEvent event) {
-
+        TextInputDialog categoryNameInput = new TextInputDialog();
+        categoryNameInput.setTitle("Create new category");
+        categoryNameInput.setHeaderText("");
+        categoryNameInput.setGraphic(null);
+        categoryNameInput.setContentText("category name:");
+        Optional<String> result = categoryNameInput.showAndWait();
+        if (result.isPresent()) {
+            String newCategory = result.get();
+            if (ency.containsCategory(newCategory)) {
+                /// @@@ DO SOMETHING
+            } else {
+                ency.addCategory(newCategory);
+                // @@ also add
+            }
+        }
     }
 
     @FXML
@@ -140,7 +172,19 @@ public class Controller {
 
     }
 
+    @FXML
+    void editCategories(KeyEvent event) {
+        System.out.println(event.getCharacter());
+        Optional<String> firstCorrectCategory = ency.getFirstCategory(event.getCharacter());
+        if (firstCorrectCategory.isPresent()) {
+            categoriesField.setText("[" + firstCorrectCategory.get() + "]");
+            ency.updateCategories(currentEntry, categoriesField.getText());
+
+        }
+        event.consume();
+    }
+
     void setStage(Stage stage) {
-        this.stage = stage;
+        primaryStage = stage;
     }
 }
