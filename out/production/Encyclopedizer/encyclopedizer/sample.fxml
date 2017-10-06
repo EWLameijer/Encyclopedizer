@@ -57,11 +57,10 @@
         <RowConstraints maxHeight="168.0" minHeight="10.0" prefHeight="96.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <TextField fx:id="conceptBrowseField" onInputMethodTextChanged="#updateConcept" onKeyReleased="#updateConcept" />
-        <Label fx:id="firstApplicableConceptLabel" text="Select category:" GridPane.columnIndex="2" />
-        <Label fx:id="lastApplicableConceptLabel" text="Label" GridPane.columnIndex="4" />
-        <Label fx:id="conceptNameLabel" text="Label" GridPane.rowIndex="3" />
-        <TextArea fx:id="conceptDataArea" prefHeight="182.0" prefWidth="192.0" wrapText="true" GridPane.columnSpan="5" GridPane.rowIndex="5" />
+        <TextField fx:id="topicBrowseField" onInputMethodTextChanged="#updateConcept" onKeyReleased="#updateConcept" />
+        <Label fx:id="selectCategoryLabel" text="Select category:" GridPane.columnIndex="2" />
+        <Label fx:id="topicLabel" text="Label" GridPane.rowIndex="3" />
+        <TextArea fx:id="descriptionArea" prefHeight="182.0" prefWidth="192.0" wrapText="true" GridPane.columnSpan="5" GridPane.rowIndex="5" />
         <ListView fx:id="referringConceptsArea" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="5" GridPane.rowIndex="7" />
             <ChoiceBox fx:id="categoryChoice" prefWidth="150.0" GridPane.columnIndex="3" />
             <Label text="Categories:" GridPane.columnIndex="1" GridPane.rowIndex="3" />

@@ -16,7 +16,7 @@ import java.util.Optional;
  */
 public class Encyclopedia {
 
-    private List<Entry> entries = new ArrayList<>();
+    private List<Article> entries = new ArrayList<>();
     private List<String> categories = new ArrayList<>();
     private static final String DEFAULT_ENCY_FILENAME =  "testency.txt";
     private String filename;
@@ -31,7 +31,7 @@ public class Encyclopedia {
             final Charset charset = StandardCharsets.UTF_8;
             List<String> lines = Files.readAllLines(path, charset);
             lines.stream().filter(line -> !line.isEmpty()).filter(line -> line.startsWith("[")).map(this::stripBrackets).forEach(this::addCategory);
-            lines.stream().filter(line -> !line.isEmpty()).filter(line -> !line.startsWith("[")).map(Entry::new).forEach(this::loadEntry);
+            lines.stream().filter(line -> !line.isEmpty()).filter(line -> !line.startsWith("[")).map(Article::new).forEach(this::loadEntry);
             Collections.sort(entries);
             checkForDuplicates();
             System.out.println("Lines: " + lines);
@@ -59,11 +59,11 @@ public class Encyclopedia {
         }
         // as I am possibly merging entries, cannot use simple foreach loop here...
         for (int entryIndex = 1; entryIndex < entries.size(); entryIndex++) {
-            Entry currentEntry = entries.get(entryIndex);
-            Entry previousEntry = entries.get(entryIndex - 1);
-            if (currentEntry.getTopic().equals(previousEntry.getTopic())) {
-                System.out.println("Duplicate in names: " + currentEntry.getTopic());
-                previousEntry.addToDescription(currentEntry.getDescription());
+            Article currentArticle = entries.get(entryIndex);
+            Article previousArticle = entries.get(entryIndex - 1);
+            if (currentArticle.getTopic().equals(previousArticle.getTopic())) {
+                System.out.println("Duplicate in names: " + currentArticle.getTopic());
+                previousArticle.addToDescription(currentArticle.getDescription());
                 entries.remove(entryIndex);
                 entryIndex--; // to handle multiple possible duplicates
             }
@@ -76,8 +76,8 @@ public class Encyclopedia {
         for (String category: categories) {
             lines.add("[" + category + "]");
         }
-        for (Entry entry : entries) {
-            lines.add(entry.toLine());
+        for (Article article : entries) {
+            lines.add(article.toLine());
             lines.add("");
         }
         try {
@@ -87,29 +87,29 @@ public class Encyclopedia {
         }
     }
 
-    public void replaceEntry(Entry originalEntry, Entry newEntry) {
-        entries.remove(originalEntry);
-        addEntry(newEntry);
+    public void replaceEntry(Article originalArticle, Article newArticle) {
+        entries.remove(originalArticle);
+        addEntry(newArticle);
     }
 
     /**
      * adds a new entry to the encyclopedia, and takes care that is is saved immediately
      *
-     * @param newEntry the entry to be added
+     * @param newArticle the entry to be added
      */
-    public void addEntry(Entry newEntry) {
-        entries.add(newEntry);
+    public void addEntry(Article newArticle) {
+        entries.add(newArticle);
         Collections.sort(entries);
         saveEncy();
     }
 
-    private void loadEntry(Entry newEntry) {
-        entries.add(newEntry);
+    private void loadEntry(Article newArticle) {
+        entries.add(newArticle);
     }
 
-    Optional<Entry> getEntryStartingWith(String textStart) {
-        for ( Entry entry : entries ) {
-            if (entry.getTopic().startsWith(textStart)) return Optional.of(entry);
+    Optional<Article> getEntryStartingWith(String textStart) {
+        for ( Article article : entries ) {
+            if (article.getTopic().startsWith(textStart)) return Optional.of(article);
         }
         return Optional.empty();
     }
@@ -118,22 +118,22 @@ public class Encyclopedia {
         return filename;
     }
 
-    public Entry getNextEntry(Entry entry) {
-        int index = entries.indexOf(entry);
+    public Article getNextEntry(Article article) {
+        int index = entries.indexOf(article);
         if (index < (entries.size() - 1)) {
             return entries.get(index + 1);
         } else {
-            return entry;
+            return article;
         }
 
     }
 
-    public Entry getPreviousEntry(Entry entry) {
-        int index = entries.indexOf(entry);
+    public Article getPreviousEntry(Article article) {
+        int index = entries.indexOf(article);
         if (index >= 1) {
             return entries.get(index - 1);
         } else {
-            return entry;
+            return article;
         }
     }
 
@@ -164,8 +164,8 @@ public class Encyclopedia {
         return Optional.empty();
     }
 
-    public void updateCategories(Entry entry, String newCategories) {
-        entry.updateCategories(newCategories);
+    public void updateCategories(Article article, String newCategories) {
+        article.updateCategories(newCategories);
         saveEncy();
     }
 }

@@ -6,19 +6,19 @@ import java.util.List;
 /**
  * Created by Eric-Wubbo on 08-07-17.
  */
-public class Entry implements Comparable<Entry> {
-    private String term;
+public class Article implements Comparable<Article> {
+    private String topic;
     private String description;
     private List<String> categories = new ArrayList<>();
 
-    Entry(String entry) {
+    Article(String entry) {
         int separatorPos = entry.indexOf(':');
         String termWithCategories = entry.substring(0,separatorPos);
         int bracketPos = termWithCategories.indexOf('[');
         if (bracketPos < 0) { // bracket not found, so no categories
-            term = termWithCategories;
+            topic = termWithCategories;
         } else {
-            term = termWithCategories.substring(0,bracketPos);
+            topic = termWithCategories.substring(0,bracketPos);
             while (bracketPos > 0) {
                 int endOfCategory = termWithCategories.indexOf(']',bracketPos);
                 categories.add(termWithCategories.substring(bracketPos + 1, endOfCategory ));
@@ -30,7 +30,7 @@ public class Entry implements Comparable<Entry> {
     }
 
     public String getTopic() {
-        return term;
+        return topic;
     }
 
     public String getDescription() {
@@ -48,15 +48,15 @@ public class Entry implements Comparable<Entry> {
         }
     }
 
-    public int compareTo(Entry otherEntry) {
-        return term.compareTo(otherEntry.term);
+    public int compareTo(Article otherArticle) {
+        return topic.compareTo(otherArticle.topic);
     }
 
-    public static Entry DEFAULT_ENTRY = new Entry(":");
+    public static Article defaultArticle = new Article(":");
 
     public String toLine() {
 
-        StringBuilder result = new StringBuilder(term);
+        StringBuilder result = new StringBuilder(topic);
         for (String category: categories) {
             result.append("[" + category + "]");
         }

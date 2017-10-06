@@ -3,7 +3,6 @@ package encyclopedizer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -11,13 +10,9 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Controller is simply the controller for the Encyclopedizer app, handling what all buttons and menu items do.
@@ -28,11 +23,11 @@ public class Controller {
     private Encyclopedia ency;
 
     // If there is an original entry that is being edited, store it in originalEntry
-    private Optional<Entry> originalEntry;
+    private Optional<Article> originalEntry;
 
     // What the entry currently looks like (which can be different from the original entry, if text is being edited
     // or such
-    private Entry currentEntry;
+    private Article currentArticle;
 
     // a reference to the primary stage of the application
     private Stage primaryStage;
@@ -42,17 +37,28 @@ public class Controller {
     @FXML
     private MenuItem openFileMenuItem;
 
-    // create new category
+    // create a new category
     @FXML
     private MenuItem createCategoryItem;
+
+    // delete a category
     @FXML
     private MenuItem deleteCategoryMenuItem;
+
+    // the field in which the user can type the first letters of the topic to be sought
     @FXML
-    private TextArea conceptDataArea;
+    private TextField topicBrowseField;
+
+    // the area in which the description is displayed (the things that are known about the topic)
     @FXML
-    private TextField conceptBrowseField;
+    private TextArea descriptionArea;
+
+    // The label that gives the full name of the topic (the browsefield may just contain 'j', but if the first
+    // article starting with 'j' is 'java', the topicLabel will contain the full term 'java'
     @FXML
-    private Label conceptNameLabel;
+    private Label topicLabel;
+
+
     @FXML
     private Label firstApplicableConceptLabel;
     @FXML
@@ -70,33 +76,33 @@ public class Controller {
         ency = new Encyclopedia();
         showEntry("");
 
-        conceptBrowseField.setOnKeyPressed((event) -> {
+        topicBrowseField.setOnKeyPressed((event) -> {
             if(event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.TAB) {
                 if (!originalEntry.isPresent()) {
-                    conceptNameLabel.setText(conceptBrowseField.getText());
+                    topicLabel.setText(topicBrowseField.getText());
                 }
-                conceptDataArea.requestFocus();
+                descriptionArea.requestFocus();
             }
             else if(event.getCode() == KeyCode.DOWN) {
-                currentEntry = ency.getNextEntry(currentEntry);
-                conceptBrowseField.setText(currentEntry.getTopic());
+                currentArticle = ency.getNextEntry(currentArticle);
+                topicBrowseField.setText(currentArticle.getTopic());
                 refreshWindow();
             }
             else if(event.getCode() == KeyCode.UP) {
-                currentEntry = ency.getPreviousEntry(currentEntry);
-                conceptBrowseField.setText(currentEntry.getTopic());
+                currentArticle = ency.getPreviousEntry(currentArticle);
+                topicBrowseField.setText(currentArticle.getTopic());
                 refreshWindow();
             }
         }
         );
 
-        conceptDataArea.setOnKeyPressed((event) -> { if(event.getCode() == KeyCode.ENTER) {
+        descriptionArea.setOnKeyPressed((event) -> { if(event.getCode() == KeyCode.ENTER) {
             if (originalEntry.isPresent()) {
-                ency.replaceEntry(originalEntry.get(), getCurrentEntry());
+                ency.replaceEntry(originalEntry.get(), getCurrentArticle());
             } else {
-                ency.addEntry(getCurrentEntry());
+                ency.addEntry(getCurrentArticle());
             }
-            conceptBrowseField.requestFocus(); } });
+            topicBrowseField.requestFocus(); } });
 
         CloseMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN));
         openFileMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
@@ -105,28 +111,27 @@ public class Controller {
     }
 
 
-    Entry getCurrentEntry() {
-        return new Entry(conceptNameLabel.getText()+ ": " + conceptDataArea.getText());
+    Article getCurrentArticle() {
+        return new Article(topicLabel.getText()+ ": " + descriptionArea.getText());
     }
 
     void refreshWindow() {
-
-        conceptNameLabel.setText(currentEntry.getTopic());
-        categoriesField.setText(currentEntry.getCategoriesAsString());
-        conceptDataArea.setText(currentEntry.getDescription());
+        topicLabel.setText(currentArticle.getTopic());
+        categoriesField.setText(currentArticle.getCategoriesAsString());
+        descriptionArea.setText(currentArticle.getDescription());
     }
 
 
     @FXML
     void updateConcept(KeyEvent event) {
-        String keyText = conceptBrowseField.getText();
+        String keyText = topicBrowseField.getText();
         showEntry(keyText);
        //
     }
 
     void showEntry(String keyText) {
         originalEntry = ency.getEntryStartingWith(keyText);
-        currentEntry = originalEntry.orElse(Entry.DEFAULT_ENTRY);
+        currentArticle = originalEntry.orElse(Article.defaultArticle);
         refreshWindow();
     }
 
@@ -178,7 +183,7 @@ public class Controller {
         Optional<String> firstCorrectCategory = ency.getFirstCategory(event.getCharacter());
         if (firstCorrectCategory.isPresent()) {
             categoriesField.setText("[" + firstCorrectCategory.get() + "]");
-            ency.updateCategories(currentEntry, categoriesField.getText());
+            ency.updateCategories(currentArticle, categoriesField.getText());
 
         }
         event.consume();

@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 /**
  * Created by Eric-Wubbo on 08-07-17.
  */
-public class EntryTest {
+public class ArticleTest {
 
     @Test
     public void testEntryConstructor() {
@@ -16,9 +16,9 @@ public class EntryTest {
         String randomData = "tastes good. Also is blue.";
         String randomEntry = randomTerm + ":" + randomData;
 
-        Entry testEntry = new Entry(randomEntry);
-        assertEquals(testEntry.getTopic(), randomTerm);
-        assertEquals(testEntry.getDescription(), randomData);
+        Article testArticle = new Article(randomEntry);
+        assertEquals(testArticle.getTopic(), randomTerm);
+        assertEquals(testArticle.getDescription(), randomData);
     }
 }
 /*
