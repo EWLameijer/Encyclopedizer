@@ -75,4 +75,8 @@ public class Article implements Comparable<Article> {
         }
         return result.toString();
     }
+
+    public boolean hasCategory(String categoryName) {
+        return categories.stream().anyMatch(c -> c.equals(categoryName));
+    }
 }

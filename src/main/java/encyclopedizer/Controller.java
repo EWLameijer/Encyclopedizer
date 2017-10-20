@@ -1,7 +1,11 @@
 package encyclopedizer;
 
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -33,15 +37,19 @@ public class Controller {
     private Stage primaryStage;
 
 
-    // open new (encyclopedia) file
+    // for opening a new (encyclopedia) file
     @FXML
     private MenuItem openFileMenuItem;
 
-    // create a new category
+    // for closing and exiting the application
+    @FXML
+    private MenuItem CloseMenuItem;
+
+    // for creating a new category
     @FXML
     private MenuItem createCategoryItem;
 
-    // delete a category
+    // for deleting a category
     @FXML
     private MenuItem deleteCategoryMenuItem;
 
@@ -58,24 +66,59 @@ public class Controller {
     @FXML
     private Label topicLabel;
 
-
-    @FXML
-    private Label firstApplicableConceptLabel;
-    @FXML
-    private Label lastApplicableConceptLabel;
+    // To display other topics that contain the sought keyword/topic
     @FXML
     private ListView<?> referringConceptsArea;
+
+    // to show the categories that the current topic belongs to
     @FXML
     private TextField categoriesField;
 
+    // for choosing the category to display (default: all)
     @FXML
-    private MenuItem CloseMenuItem;
+    private ChoiceBox<String> categoryChoice;
 
+
+    /**
+     * Initialize the window/application at startup time
+     */
     @FXML
     public void initialize() {
         ency = new Encyclopedia();
         showEntry("");
+        updateCategoryChoices();
 
+        // set listeners
+        setTopicBrowseFieldListeners();
+        setDescriptionAreaListeners();
+        categoryChoice.getSelectionModel().selectedItemProperty().addListener(this::categoryChanged);
+
+        // set accelerators
+        CloseMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN));
+        openFileMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
+        createCategoryItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN));
+        deleteCategoryMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.D, KeyCombination.CONTROL_DOWN));
+    }
+
+    /**
+     * Set the listeners to the description area, basically what to do when ENTER is pressed (which is to
+     * save the entry, but it needs to be decided whether an entry needs to be added or replaced.)
+     */
+    private void setDescriptionAreaListeners() {
+        descriptionArea.setOnKeyPressed((event) -> { if(event.getCode() == KeyCode.ENTER) {
+            if (originalEntry.isPresent()) {
+                ency.replaceEntry(originalEntry.get(), getCurrentArticle());
+            } else {
+                ency.addEntry(getCurrentArticle());
+            }
+            topicBrowseField.requestFocus(); } });
+    }
+
+    /**
+     * Set the listener(s) for the topic browsing field, which must update the description when the topic(name) is
+     * changed for whatever reason.
+     */
+    private void setTopicBrowseFieldListeners() {
         topicBrowseField.setOnKeyPressed((event) -> {
             if(event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.TAB) {
                 if (!originalEntry.isPresent()) {
@@ -95,32 +138,37 @@ public class Controller {
             }
         }
         );
-
-        descriptionArea.setOnKeyPressed((event) -> { if(event.getCode() == KeyCode.ENTER) {
-            if (originalEntry.isPresent()) {
-                ency.replaceEntry(originalEntry.get(), getCurrentArticle());
-            } else {
-                ency.addEntry(getCurrentArticle());
-            }
-            topicBrowseField.requestFocus(); } });
-
-        CloseMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN));
-        openFileMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
-        createCategoryItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN));
-        deleteCategoryMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.D, KeyCombination.CONTROL_DOWN));
     }
 
-
-    Article getCurrentArticle() {
-        return new Article(topicLabel.getText()+ ": " + descriptionArea.getText());
+    /** if the category is changed in the choice box, only continue showing the item if it falls under the new category.
+     * Otherwise show the next entry that falls under the category.
+      */
+    private void categoryChanged(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        //System.out.println("Old: " + oldValue + " New: " + newValue);
+        if (oldValue.equals(newValue) || newValue.equals("all") || getCurrentArticle().hasCategory(newValue)) {
+            // do nothing: you can continue dislaying the current entry
+        } else {
+            ency.getNextArticle(topicLabel.getText(), newValue);
+            System.out.println("Do something!");
+        }
     }
 
-    void refreshWindow() {
+    /**
+     * Gets the current article, which is the topic as shown in the topic label with the description as given in the
+     * description area.
+     *
+     * @return the article in the main window, in its current state.
+     */
+    //@@@TODO add categories?
+    private Article getCurrentArticle() {
+        return new Article(topicLabel.getText()+ categoriesField.getText() + ": " + descriptionArea.getText());
+    }
+
+   private void refreshWindow() {
         topicLabel.setText(currentArticle.getTopic());
         categoriesField.setText(currentArticle.getCategoriesAsString());
         descriptionArea.setText(currentArticle.getDescription());
     }
-
 
     @FXML
     void updateConcept(KeyEvent event) {
@@ -129,7 +177,7 @@ public class Controller {
        //
     }
 
-    void showEntry(String keyText) {
+    private void showEntry(String keyText) {
         originalEntry = ency.getEntryStartingWith(keyText);
         currentArticle = originalEntry.orElse(Article.defaultArticle);
         refreshWindow();
@@ -141,6 +189,14 @@ public class Controller {
         Platform.exit();
     }
 
+    private void updateCategoryChoices() {
+        ObservableList optionList = FXCollections.observableArrayList();
+
+        ency.getCategoryList(optionList);
+        categoryChoice.setItems(optionList);
+        categoryChoice.setValue("all");
+    }
+
     @FXML
     void openFile(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -149,6 +205,7 @@ public class Controller {
         if (file != null) {
             ency = new Encyclopedia(file.getAbsolutePath());
             showEntry("");
+            updateCategoryChoices();
         }
 
     }

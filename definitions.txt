@@ -1,6 +1,8 @@
 
 article: a keyword [topic] (like 'java') with associated information [description] like 'Major programming language, used for many applications, currently mainly backend and mobile/android'.
 
+category: a class that unifies certain topics, like "animals". A topic can be part of multiple categories.
+
 description: the description of a topic. Topic plus description together form an article
 
 encyclopedia: an encyclopedia that contains information about various subjects/keywords. Basically, a list of [article]s

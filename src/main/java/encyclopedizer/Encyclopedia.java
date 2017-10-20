@@ -168,4 +168,16 @@ public class Encyclopedia {
         article.updateCategories(newCategories);
         saveEncy();
     }
+
+    public void getCategoryList(List<String> list) {
+        list.add("all");
+        for (String category: categories) {
+            list.add(category);
+        }
+    }
+
+    public Article getNextArticle(String currentTopic, String desiredCategory) {
+        throw new RuntimeException("Not yet implemented");
+        //return new Article(":");
+    }
 }
