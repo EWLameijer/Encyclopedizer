@@ -16,12 +16,16 @@ import java.util.Optional;
  */
 public class Encyclopedia {
 
-    private List<Article> entries = new ArrayList<>();
+    private List<Article> articles = new ArrayList<>();
     private List<String> categories = new ArrayList<>();
     private static final String DEFAULT_ENCY_FILENAME =  "testency.txt";
     private String filename;
+    public static final String ALL = "all";
 
     public Encyclopedia(String encyFilename) {
+        if (encyFilename.equals("")) {
+            encyFilename = DEFAULT_ENCY_FILENAME;
+        }
         try {
             System.out.println("Started " + encyFilename);
             Path pwd = Paths.get("").toAbsolutePath();
@@ -32,18 +36,18 @@ public class Encyclopedia {
             List<String> lines = Files.readAllLines(path, charset);
             lines.stream().filter(line -> !line.isEmpty()).filter(line -> line.startsWith("[")).map(this::stripBrackets).forEach(this::addCategory);
             lines.stream().filter(line -> !line.isEmpty()).filter(line -> !line.startsWith("[")).map(Article::new).forEach(this::loadEntry);
-            Collections.sort(entries);
+            Collections.sort(articles);
             checkForDuplicates();
             System.out.println("Lines: " + lines);
-            System.out.println("Number of entries: " + entries.size());
+            System.out.println("Number of articles: " + articles.size());
         } catch (IOException e) {
-            System.out.println("Excepted");
+            System.out.println("Encylopedia::Encyclopedia(String): IOException occurred");
         }
     }
 
-    public Encyclopedia() {
-        this(DEFAULT_ENCY_FILENAME);
-    }
+   // public Encyclopedia() {
+        //this(DEFAULT_ENCY_FILENAME);
+    //}
 
     private String stripBrackets(String originalText) {
         if (originalText.startsWith("[") && originalText.endsWith("]")) {
@@ -54,17 +58,17 @@ public class Encyclopedia {
     }
 
     private void checkForDuplicates() {
-        if (entries.size() == 0) {
+        if (articles.size() == 0) {
             return;
         }
-        // as I am possibly merging entries, cannot use simple foreach loop here...
-        for (int entryIndex = 1; entryIndex < entries.size(); entryIndex++) {
-            Article currentArticle = entries.get(entryIndex);
-            Article previousArticle = entries.get(entryIndex - 1);
+        // as I am possibly merging articles, cannot use simple foreach loop here...
+        for (int entryIndex = 1; entryIndex < articles.size(); entryIndex++) {
+            Article currentArticle = articles.get(entryIndex);
+            Article previousArticle = articles.get(entryIndex - 1);
             if (currentArticle.getTopic().equals(previousArticle.getTopic())) {
                 System.out.println("Duplicate in names: " + currentArticle.getTopic());
                 previousArticle.addToDescription(currentArticle.getDescription());
-                entries.remove(entryIndex);
+                articles.remove(entryIndex);
                 entryIndex--; // to handle multiple possible duplicates
             }
         }
@@ -76,7 +80,7 @@ public class Encyclopedia {
         for (String category: categories) {
             lines.add("[" + category + "]");
         }
-        for (Article article : entries) {
+        for (Article article : articles) {
             lines.add(article.toLine());
             lines.add("");
         }
@@ -88,7 +92,7 @@ public class Encyclopedia {
     }
 
     public void replaceEntry(Article originalArticle, Article newArticle) {
-        entries.remove(originalArticle);
+        articles.remove(originalArticle);
         addEntry(newArticle);
     }
 
@@ -98,18 +102,31 @@ public class Encyclopedia {
      * @param newArticle the entry to be added
      */
     public void addEntry(Article newArticle) {
-        entries.add(newArticle);
-        Collections.sort(entries);
+        articles.add(newArticle);
+        Collections.sort(articles);
         saveEncy();
     }
 
     private void loadEntry(Article newArticle) {
-        entries.add(newArticle);
+        articles.add(newArticle);
+    }
+
+    /**
+     * Returns whether a certain string (the 'searchedString') starts with another string
+     * (the 'soughtString'). Ignores case.
+     *
+     * @param searchedString
+     * @param soughtString
+     * @return
+     */
+    private boolean startsWithIgnoreCase(String searchedString, String soughtString) {
+        if (soughtString.length() > searchedString.length()) return false;
+        return soughtString.equalsIgnoreCase(searchedString.substring(0,soughtString.length()));
     }
 
     Optional<Article> getEntryStartingWith(String textStart) {
-        for ( Article article : entries ) {
-            if (article.getTopic().startsWith(textStart)) return Optional.of(article);
+        for ( Article article : articles) {
+            if (startsWithIgnoreCase(article.getTopic(),textStart)) return Optional.of(article);
         }
         return Optional.empty();
     }
@@ -118,23 +135,30 @@ public class Encyclopedia {
         return filename;
     }
 
-    public Article getNextEntry(Article article) {
-        int index = entries.indexOf(article);
-        if (index < (entries.size() - 1)) {
-            return entries.get(index + 1);
-        } else {
-            return article;
+    public Article getNextEntry(Article article, String category) {
+        int index = articles.indexOf(article);
+        while (index < (articles.size() - 1)) {
+            index++;
+            Article nextArticle = articles.get(index);
+            if (category.equals(ALL) ||nextArticle.hasCategory(category)) {
+                return nextArticle;
+            }
         }
+        return article; // there is no 'next' article; don't respond to down button requests.
 
     }
 
-    public Article getPreviousEntry(Article article) {
-        int index = entries.indexOf(article);
-        if (index >= 1) {
-            return entries.get(index - 1);
-        } else {
-            return article;
+    public Article getPreviousEntry(Article article, String category) {
+        int index = articles.indexOf(article);
+        while (index >= 1) {
+            index--;
+            Article previousArticle = articles.get(index);
+            if (category.equals(ALL) || previousArticle.hasCategory(category)) {
+                return previousArticle;
+            }
         }
+        return article; // you can't scroll in this direction
+
     }
 
     private String normalizeCategory(String rawCategoryName) {
@@ -177,7 +201,24 @@ public class Encyclopedia {
     }
 
     public Article getNextArticle(String currentTopic, String desiredCategory) {
-        throw new RuntimeException("Not yet implemented");
-        //return new Article(":");
+        Optional<Article> firstCorrectArticle = Optional.empty();
+        for (Article article: articles) {
+            if (article.getTopic().compareTo(currentTopic) >= 0 && article.hasCategory(desiredCategory)) {
+                firstCorrectArticle = Optional.of(article);
+                break;
+            }
+        }
+        if (firstCorrectArticle.isPresent()) {
+            return firstCorrectArticle.get();
+        } else {
+            // start loop from beginning
+            for (Article article: articles) {
+                if (article.hasCategory(desiredCategory)) {
+                    return article;
+                }
+            }
+        }
+        // no article found at all ?!
+        return new Article("[" + desiredCategory + "]:" );
     }
 }

@@ -57,7 +57,7 @@
         <RowConstraints maxHeight="168.0" minHeight="10.0" prefHeight="96.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <TextField fx:id="topicBrowseField" onInputMethodTextChanged="#updateConcept" onKeyReleased="#updateConcept" />
+        <TextField fx:id="topicBrowseField" onInputMethodTextChanged="#updateTopic" onKeyReleased="#updateTopic" />
         <Label fx:id="selectCategoryLabel" text="Select category:" GridPane.columnIndex="2" />
         <Label fx:id="topicLabel" text="Label" GridPane.rowIndex="3" />
         <TextArea fx:id="descriptionArea" prefHeight="182.0" prefWidth="192.0" wrapText="true" GridPane.columnSpan="5" GridPane.rowIndex="5" />

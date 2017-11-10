@@ -12,7 +12,14 @@ public class Article implements Comparable<Article> {
     private List<String> categories = new ArrayList<>();
 
     Article(String entry) {
+        System.out.println(entry);
         int separatorPos = entry.indexOf(':');
+        if (separatorPos < 0) {
+            System.out.println("Skipping badly formatted entry " + entry);
+            topic = "";
+            description = "";
+            return;
+        }
         String termWithCategories = entry.substring(0,separatorPos);
         int bracketPos = termWithCategories.indexOf('[');
         if (bracketPos < 0) { // bracket not found, so no categories
@@ -49,7 +56,12 @@ public class Article implements Comparable<Article> {
     }
 
     public int compareTo(Article otherArticle) {
-        return topic.compareTo(otherArticle.topic);
+        int caseIndependentCompare = topic.compareToIgnoreCase(otherArticle.topic);
+        if (caseIndependentCompare != 0) {
+            return caseIndependentCompare;
+        } else {
+            return topic.compareTo(otherArticle.topic);
+        }
     }
 
     public static Article defaultArticle = new Article(":");
