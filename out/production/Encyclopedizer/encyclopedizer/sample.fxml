@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
@@ -21,12 +20,6 @@
             <items>
                   <MenuItem fx:id="openFileMenuItem" mnemonicParsing="false" onAction="#openFile" text="Open" />
               <MenuItem fx:id="CloseMenuItem" mnemonicParsing="false" onAction="#closeApplication" text="Quit" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Category Management">
-            <items>
-              <MenuItem fx:id="createCategoryItem" mnemonicParsing="false" onAction="#createCategory" text="Create category" />
-                  <MenuItem fx:id="deleteCategoryMenuItem" mnemonicParsing="false" onAction="#deleteCategory" text="Delete category" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -58,13 +51,10 @@
     </rowConstraints>
     <children>
         <TextField fx:id="topicBrowseField" onInputMethodTextChanged="#updateTopic" onKeyReleased="#updateTopic" />
-        <Label fx:id="selectCategoryLabel" text="Select category:" GridPane.columnIndex="2" />
         <Label fx:id="topicLabel" text="Label" GridPane.rowIndex="3" />
         <TextArea fx:id="descriptionArea" prefHeight="182.0" prefWidth="192.0" wrapText="true" GridPane.columnSpan="5" GridPane.rowIndex="5" />
         <ListView fx:id="referringConceptsArea" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="5" GridPane.rowIndex="7" />
-            <ChoiceBox fx:id="categoryChoice" prefWidth="150.0" GridPane.columnIndex="3" />
-            <Label text="Categories:" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <TextField fx:id="categoriesField" onKeyTyped="#editCategories" prefHeight="25.0" prefWidth="194.0" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="3" /> </children>
+    </children>
     </GridPane>
    </center>
 </BorderPane>

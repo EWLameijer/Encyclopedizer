@@ -1,9 +1,6 @@
 package encyclopedizer;
 
 import javafx.application.Platform;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -25,16 +22,12 @@ public class Controller {
     // Reference to the encyclopedia that is viewed/edited
     private Encyclopedia ency;
 
-    // If there is an original entry that is being edited, store it in originalEntry
-    private Optional<Article> originalEntry;
-
-    // What the entry currently looks like (which can be different from the original entry, if text is being edited
-    // or such
-    private Article currentArticle;
+    // If there is an original entry of the encyclopedia that is being edited, originalArticle refers to it. If a new
+    // article is being created, originalArticle is empty.
+    private Optional<Article> originalArticle;
 
     // a reference to the primary stage of the application
     private Stage primaryStage;
-
 
     // for opening a new (encyclopedia) file
     @FXML
@@ -43,14 +36,6 @@ public class Controller {
     // for closing and exiting the application
     @FXML
     private MenuItem CloseMenuItem;
-
-    // for creating a new category
-    @FXML
-    private MenuItem createCategoryItem;
-
-    // for deleting a category
-    @FXML
-    private MenuItem deleteCategoryMenuItem;
 
     // the field in which the user can type the first letters of the topic to be sought
     @FXML
@@ -69,15 +54,6 @@ public class Controller {
     @FXML
     private ListView<?> referringConceptsArea;
 
-    // to show the categories that the current topic belongs to
-    @FXML
-    private TextField categoriesField;
-
-    // for choosing the category to display (default: all)
-    @FXML
-    private ChoiceBox<String> categoryChoice;
-
-
     /**
      * Initialize the window/application at startup time
      */
@@ -88,17 +64,10 @@ public class Controller {
         // set listeners
         setTopicBrowseFieldListeners();
         setDescriptionAreaListeners();
-        categoryChoice.getSelectionModel().selectedItemProperty().addListener(this::categoryChanged);
 
-        // set accelerators
+        // set accelerators (Keyboard shortcuts like Ctrl+Q)
         CloseMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN));
         openFileMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
-        createCategoryItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN));
-        deleteCategoryMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.D, KeyCombination.CONTROL_DOWN));
-    }
-
-    String getCurrentCategory() {
-        return categoryChoice.getValue();
     }
 
     /**
@@ -107,7 +76,6 @@ public class Controller {
     private void initializeData(String encyName) {
         ency = new Encyclopedia(encyName);
         showFirstApplicableEntry("");
-        updateCategoryChoices();
     }
 
     boolean articleHasBeenChanged() {
@@ -121,10 +89,11 @@ public class Controller {
      */
     private void setDescriptionAreaListeners() {
         descriptionArea.setOnKeyPressed((event) -> { if(event.getCode() == KeyCode.ENTER) {
-            if (originalEntry.isPresent() && articleHasBeenChanged()) {
-                ency.replaceEntry(originalEntry.get(), getCurrentArticle());
+            Article cleanedCurrentArticle = getCurrentArticle().cleanUp();
+            if (originalArticle.isPresent() && articleHasBeenChanged()) {
+                ency.replaceEntry(originalArticle.get(), cleanedCurrentArticle);
             } else {
-                ency.addEntry(getCurrentArticle());
+                ency.addEntry(cleanedCurrentArticle);
             }
             topicBrowseField.requestFocus(); } });
     }
@@ -136,53 +105,39 @@ public class Controller {
     private void setTopicBrowseFieldListeners() {
         topicBrowseField.setOnKeyPressed((event) -> {
             if(event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.TAB) {
-                if (!originalEntry.isPresent()) {
+                if (!originalArticle.isPresent()) {
                     topicLabel.setText(topicBrowseField.getText());
                 }
                 descriptionArea.requestFocus();
             }
-            else if(event.getCode() == KeyCode.DOWN) {
-                currentArticle = ency.getNextEntry(currentArticle, getCurrentCategory());
-                topicBrowseField.setText(currentArticle.getTopic());
-                refreshWindow();
-            }
-            else if(event.getCode() == KeyCode.UP) {
-                currentArticle = ency.getPreviousEntry(currentArticle, getCurrentCategory());
-                topicBrowseField.setText(currentArticle.getTopic());
-                refreshWindow();
+            else if (originalArticle.isPresent()) {
+                if (event.getCode() == KeyCode.DOWN) {
+                    Article articleToView = ency.getNextEntry(originalArticle.get());
+                    topicBrowseField.setText(articleToView.getTopic());
+                    refreshWindow(articleToView);
+                } else if(event.getCode() == KeyCode.UP ) {
+                    Article articleToView = ency.getPreviousEntry(originalArticle.get());
+                    topicBrowseField.setText(articleToView.getTopic());
+                    refreshWindow(articleToView);
+                }
             }
         }
         );
     }
 
-    /** if the category is changed in the choice box, only continue showing the item if it falls under the new category.
-     * Otherwise show the next entry that falls under the category.
-      */
-    private void categoryChanged(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        if (oldValue == null || newValue == null) return;
-
-        if (oldValue.equals(newValue) || newValue.equals("all") || getCurrentArticle().hasCategory(newValue)) {
-            // do nothing: you can continue dislaying the current entry
-        } else {
-            currentArticle = ency.getNextArticle(topicLabel.getText(), newValue);
-            refreshWindow();
-        }
-    }
-
-    /**
+   /**
      * Gets the current article, which is the topic as shown in the topic label with the description as given in the
      * description area.
      *
      * @return the article in the main window, in its current state.
      */
     private Article getCurrentArticle() {
-        return new Article(topicLabel.getText()+ categoriesField.getText() + ": " + descriptionArea.getText());
+        return new Article(topicLabel.getText() + ": " + descriptionArea.getText());
     }
 
-   private void refreshWindow() {
-        topicLabel.setText(currentArticle.getTopic());
-        categoriesField.setText(currentArticle.getCategoriesAsString());
-        descriptionArea.setText(currentArticle.getDescription());
+   private void refreshWindow(Article articleToView) {
+        topicLabel.setText(articleToView.getTopic());
+        descriptionArea.setText(articleToView.getDescription());
     }
 
     /**
@@ -203,9 +158,9 @@ public class Controller {
      *                TODO: Make this case-insensitive!
      */
     private void showFirstApplicableEntry(String keyText) {
-        originalEntry = ency.getEntryStartingWith(keyText);
-        currentArticle = originalEntry.orElse(Article.defaultArticle);
-        refreshWindow();
+        originalArticle = ency.getEntryStartingWith(keyText);
+        Article articleToView = originalArticle.orElse(Article.defaultArticle);
+        refreshWindow(articleToView);
     }
 
     /**
@@ -218,17 +173,6 @@ public class Controller {
         Platform.exit();
     }
 
-    /**
-     *
-     */
-    private void updateCategoryChoices() {
-        ObservableList optionList = FXCollections.observableArrayList();
-
-        ency.getCategoryList(optionList);
-        categoryChoice.setItems(optionList);
-        categoryChoice.setValue("all");
-    }
-
     @FXML
     void openFile(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -237,45 +181,7 @@ public class Controller {
         if (file != null) {
             ency = new Encyclopedia(file.getAbsolutePath());
             showFirstApplicableEntry("");
-            updateCategoryChoices();
         }
-
-    }
-
-    @FXML
-    void createCategory(ActionEvent event) {
-        TextInputDialog categoryNameInput = new TextInputDialog();
-        categoryNameInput.setTitle("Create new category");
-        categoryNameInput.setHeaderText("");
-        categoryNameInput.setGraphic(null);
-        categoryNameInput.setContentText("category name:");
-        Optional<String> result = categoryNameInput.showAndWait();
-        if (result.isPresent()) {
-            String newCategory = result.get();
-            if (ency.containsCategory(newCategory)) {
-                /// @@@ DO SOMETHING
-            } else {
-                ency.addCategory(newCategory);
-                // @@ also add
-            }
-        }
-    }
-
-    @FXML
-    void deleteCategory(ActionEvent event) {
-
-    }
-
-    @FXML
-    void editCategories(KeyEvent event) {
-        System.out.println(event.getCharacter());
-        Optional<String> firstCorrectCategory = ency.getFirstCategory(event.getCharacter());
-        if (firstCorrectCategory.isPresent()) {
-            categoriesField.setText("[" + firstCorrectCategory.get() + "]");
-            ency.updateCategories(currentArticle, categoriesField.getText());
-
-        }
-        event.consume();
     }
 
     void setStage(Stage stage) {

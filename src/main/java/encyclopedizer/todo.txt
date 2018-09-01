@@ -1,2 +1,1 @@
-1) get test framework running (also proper directory structure)
-2) get it under version control.
+1) get it under version control.
