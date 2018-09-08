@@ -151,6 +151,12 @@ public class Controller {
         showFirstApplicableEntry(keyText);
     }
 
+    @FXML
+    void descriptionAreaKeyHandler(KeyEvent event) {
+        if (topicLabel.getText().equals("")) {
+            topicLabel.setText(topicBrowseField.getText());
+        }
+    }
     /**
      * Shows the first entry in the dictionary that starts with the given text
      *

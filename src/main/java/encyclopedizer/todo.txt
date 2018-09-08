@@ -1,1 +1,7 @@
-1) get it under version control.
+does not automatically load last-edited ency :(
+3) Problems if you change focus without tab or such: medium-box remains empty, input is forgotten.
+4) provide ency with a different icon than Eb
+
+??? Try make Kotlin version?
+? Remove categories?
+? Add find function?

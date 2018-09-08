@@ -52,7 +52,7 @@
     <children>
         <TextField fx:id="topicBrowseField" onInputMethodTextChanged="#updateTopic" onKeyReleased="#updateTopic" />
         <Label fx:id="topicLabel" text="Label" GridPane.rowIndex="3" />
-        <TextArea fx:id="descriptionArea" prefHeight="182.0" prefWidth="192.0" wrapText="true" GridPane.columnSpan="5" GridPane.rowIndex="5" />
+        <TextArea fx:id="descriptionArea" onKeyReleased="#descriptionAreaKeyHandler" prefHeight="182.0" prefWidth="192.0" wrapText="true" GridPane.columnSpan="5" GridPane.rowIndex="5" />
         <ListView fx:id="referringConceptsArea" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="5" GridPane.rowIndex="7" />
     </children>
     </GridPane>
