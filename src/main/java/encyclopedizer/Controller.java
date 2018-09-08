@@ -12,6 +12,12 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -54,12 +60,15 @@ public class Controller {
     @FXML
     private ListView<?> referringConceptsArea;
 
+    private static final Path pathOfEncyList = Paths.get("used-encys_encyclopedizer.txt");
+    private static final Charset charset = StandardCharsets.UTF_8;
+
     /**
      * Initialize the window/application at startup time
      */
     @FXML
     public void initialize() {
-        initializeData("");
+        loadPreviousEncy();
 
         // set listeners
         setTopicBrowseFieldListeners();
@@ -70,11 +79,32 @@ public class Controller {
         openFileMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
     }
 
+    private void loadPreviousEncy() {
+        try {
+            List<String> lines = Files.readAllLines(pathOfEncyList, charset);
+            initializeData(lines.get(0));
+        } catch (IOException e) {
+            saveEncyName("");
+        }
+    }
+
+    private void saveEncyName(String encyName) {
+        try {
+            //Files.createFile(pathOfEncyList);
+            ArrayList<String> lines = new ArrayList<>();
+            lines.add(encyName);
+            Files.write(pathOfEncyList,lines, charset, StandardOpenOption.CREATE);
+        } catch (IOException e) {
+            ReportError.report("Cannot create a file to remember the name of the last loaded encyclopedia");
+        }
+    }
+
     /**
      * Initialize the data (so the encyclopedia)
      */
     private void initializeData(String encyName) {
         ency = new Encyclopedia(encyName);
+        saveEncyName(encyName);
         showFirstApplicableEntry("");
     }
 
@@ -185,8 +215,7 @@ public class Controller {
         fileChooser.setTitle("Open Resource File");
         File file = fileChooser.showOpenDialog(primaryStage);
         if (file != null) {
-            ency = new Encyclopedia(file.getAbsolutePath());
-            showFirstApplicableEntry("");
+            initializeData(file.getAbsolutePath());
         }
     }
 
