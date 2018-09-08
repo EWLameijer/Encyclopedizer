@@ -7,10 +7,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/encyclopedizer/book.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/encyclopedizer/lemmling-Cartoon-owl-sitting-on-a-book.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Encyclopedizer.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Encyclopedizer.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/artifacts/Encyclopedizer_jar/Encyclopedizer_jar.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/Encyclopedizer_jar/Encyclopedizer_jar.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Encyclopedizer/encyclopedizer/Controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Encyclopedizer/encyclopedizer/Controller.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Encyclopedizer/encyclopedizer/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Encyclopedizer/encyclopedizer/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/encyclopedizer/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/encyclopedizer/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/encyclopedizer/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/encyclopedizer/Main.java" afterDir="false" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -78,6 +84,7 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="java" value="1" />
+          <entry key="properties" value="1" />
           <entry key="txt" value="2" />
         </counts>
       </usages-collector>
@@ -85,19 +92,20 @@
         <counts>
           <entry key="JAVA" value="1" />
           <entry key="PLAIN_TEXT" value="2" />
+          <entry key="Properties" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="fxml" value="11" />
-          <entry key="java" value="2099" />
-          <entry key="txt" value="107" />
+          <entry key="java" value="2258" />
+          <entry key="txt" value="108" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="2099" />
-          <entry key="PLAIN_TEXT" value="107" />
+          <entry key="JAVA" value="2258" />
+          <entry key="PLAIN_TEXT" value="108" />
           <entry key="XML" value="11" />
         </counts>
       </usages-collector>
@@ -109,19 +117,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/encyclopedizer/ReportError.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="11" column="5" selection-start-line="11" selection-start-column="5" selection-end-line="11" selection-end-column="5" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/encyclopedizer/Controller.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="122">
-              <caret line="70" column="27" selection-start-line="70" selection-start-column="27" selection-end-line="70" selection-end-column="27" />
+            <state relative-caret-position="204">
+              <caret line="82" column="13" selection-start-line="82" selection-start-column="13" selection-end-line="82" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -131,11 +130,7 @@
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/used-encys_encyclopedizer.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
-            </state>
-          </provider>
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -164,15 +159,15 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/encyclopedizer/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="28" column="44" selection-start-line="28" selection-start-column="44" selection-end-line="28" selection-end-column="44" />
+            <state relative-caret-position="289">
+              <caret line="17" column="101" selection-start-line="17" selection-start-column="101" selection-end-line="17" selection-end-column="101" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <marker date="1535793943926" expanded="false" signature="1404:1419" ph=" { " />
-                <marker date="1535793943926" expanded="false" signature="1432:1442" ph=" }" />
+                <marker date="1536436330658" expanded="false" signature="1389:1404" ph=" { " />
+                <marker date="1536436330658" expanded="false" signature="1417:1427" ph=" }" />
               </folding>
             </state>
           </provider>
@@ -255,20 +250,20 @@
         <option value="$PROJECT_DIR$/src/main/java/encyclopedizer/ReportError.java" />
         <option value="$PROJECT_DIR$/src/main/java/encyclopedizer/Encyclopedia.java" />
         <option value="$PROJECT_DIR$/src/main/java/encyclopedizer/Article.java" />
-        <option value="$PROJECT_DIR$/src/main/java/encyclopedizer/Main.java" />
         <option value="$PROJECT_DIR$/src/main/java/encyclopedizer/todo.txt" />
         <option value="$PROJECT_DIR$/src/main/java/encyclopedizer/sample.fxml" />
         <option value="$PROJECT_DIR$/testency.txt" />
         <option value="$PROJECT_DIR$/used-encys_encyclopedizer.txt" />
         <option value="$PROJECT_DIR$/src/main/java/encyclopedizer/Controller.java" />
+        <option value="$PROJECT_DIR$/src/main/java/encyclopedizer/Main.java" />
       </list>
     </option>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="30" />
-    <option name="y" value="4" />
-    <option name="width" value="1254" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="340" />
+    <option name="y" value="6" />
+    <option name="width" value="1541" />
     <option name="height" value="1056" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -287,6 +282,11 @@
             <path>
               <item name="Encyclopedizer" type="b2602c69:ProjectViewProjectNode" />
               <item name="Encyclopedizer" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Encyclopedizer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Encyclopedizer" type="462c0819:PsiDirectoryNode" />
+              <item name=".idea" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Encyclopedizer" type="b2602c69:ProjectViewProjectNode" />
@@ -319,8 +319,15 @@
               <item name="Encyclopedizer" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="META-INF" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Encyclopedizer" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Encyclopedizer" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="encyclopedizer" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -339,7 +346,7 @@
     <property name="MemberChooser.sorted" value="false" />
     <property name="OverrideImplement.combined" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1536415498969" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1536436344267" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
     <property name="create.test.in.the.same.root" value="true" />
     <property name="dynamic.classpath" value="false" />
@@ -349,23 +356,24 @@
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="recentsLimit" value="5" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="settings.editor.selected.configurable" value="project.propCompiler" />
     <property name="settings.editor.splitter.proportion" value="0.23435949" />
   </component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.RecentsKey">
       <recent name="encyclopedizer" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Programming\Encyclopedizer" />
+    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="encyclopedizer" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Programming\Encyclopedizer" />
     </key>
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Programming\Encyclopedizer\src\main\resources\encyclopedizer" />
       <recent name="C:\Programming\Encyclopedizer" />
     </key>
   </component>
@@ -589,11 +597,11 @@
     <option name="totallyTimeSpent" value="1302000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="340" y="6" width="1541" height="1056" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.1716418" />
-      <window_info id="Structure" order="1" weight="0.1945629" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.3153275" />
+      <window_info id="Structure" order="1" weight="0.1944664" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
       <window_info id="UI Designer" order="4" />
@@ -602,7 +610,7 @@
       <window_info id="Nl-Palette" order="7" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32936078" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32827735" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32827735" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39957717" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -704,18 +712,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/encyclopedizer/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="28" column="44" selection-start-line="28" selection-start-column="44" selection-end-line="28" selection-end-column="44" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <marker date="1535793943926" expanded="false" signature="1404:1419" ph=" { " />
-            <marker date="1535793943926" expanded="false" signature="1432:1442" ph=" }" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/encyclopedizer/Encyclopedia.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="476">
@@ -742,18 +738,29 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/used-encys_encyclopedizer.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
-        </state>
-      </provider>
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/encyclopedizer/Controller.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="122">
-          <caret line="70" column="27" selection-start-line="70" selection-start-column="27" selection-end-line="70" selection-end-column="27" />
+        <state relative-caret-position="204">
+          <caret line="82" column="13" selection-start-line="82" selection-start-column="13" selection-end-line="82" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/images.properties">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/encyclopedizer/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="101" selection-start-line="17" selection-start-column="101" selection-end-line="17" selection-end-column="101" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <marker date="1536436330658" expanded="false" signature="1389:1404" ph=" { " />
+            <marker date="1536436330658" expanded="false" signature="1417:1427" ph=" }" />
           </folding>
         </state>
       </provider>

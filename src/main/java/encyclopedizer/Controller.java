@@ -82,7 +82,7 @@ public class Controller {
     private void loadPreviousEncy() {
         try {
             List<String> lines = Files.readAllLines(pathOfEncyList, charset);
-            initializeData(lines.get(0));
+            initializeData(lines.size() < 1 ? "" : lines.get(0));
         } catch (IOException e) {
             saveEncyName("");
         }

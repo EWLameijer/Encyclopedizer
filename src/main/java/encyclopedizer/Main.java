@@ -1,22 +1,22 @@
 package encyclopedizer;
 
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.control.cell.ComboBoxListCell;
-import javafx.scene.layout.StackPane;
+
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.fxml.FXMLLoader;
 
-import javafx.scene.control.*;
+
 
 public class Main extends Application {
     private static Stage primaryStage;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        Image icon = new Image(getClass().getResourceAsStream("lemmling-Cartoon-owl-sitting-on-a-book.png"));
+        primaryStage.getIcons().add(icon);
             this.primaryStage = primaryStage;
 
             Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
